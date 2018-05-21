@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上传照片</title>
+    <link rel="stylesheet" type="text/css" href="../css/element-ui-2.0.7.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome-min.css">
+    <link rel="stylesheet" type="text/css" href="../css/photo-add.css">
+
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="../js/element-ui-2.0.7.js"></script>
+    <script type="text/javascript" src="../js/edu.js"></script>
+</head>
+<body>
+<div class="photo-add">
+    <div class="body">
+        <el-form ref="form" :model="formData" method="post" action="../photo/save" enctype="multipart/form-data"  name="photo" label-width="100px" label-Position="left">
+            <el-form-item label="照片标题">
+                <el-input v-model="formData.title" name="title" ref="title"></el-input>
+            </el-form-item>
+            <el-form-item label="分类">
+                <el-select v-model="formData.catalog" placeholder="请选择" name="catalog">
+                    <el-option v-for="item in catalogOptions" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="上传文件">
+                <el-input v-model="formData.file" type="file" name="file"></el-input>
+            </el-form-item>
+            <el-form-item label="照片描述">
+                <el-input v-model="formData.descs" name="descs"></el-input>
+            </el-form-item>
+        </el-form>
+        <div class="error-msg" v-show="errMsg">{{errMsg}}</div>
+    </div>
+    <div class="tools">
+        <el-button type="primary" icon="fa fa-cloud-upload" @click="save()">保存</el-button>
+    </div>
+</div>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '.photo-add',
+        data: {
+            errMsg:"",
+            catalogOptions:[
+                {value:"A",label:"风景"},
+                {value:"B",label:"人物"},
+                {value:"C",label:"夜景"}
+            ],
+            formData:{
+                catalog:"A"
+            }
+        },
+        methods:{
+            save:function () {
+                var file = document.querySelector("input[type=file]");
+                var n = file.files.length;
+                if(n <= 0){
+                    vue.errMsg = "请先选择上传的文件.";
+                    return;
+                }
+                if(!vue.formData.title){
+                    vue.errMsg = "标题不能为空";
+                    vue.$refs.title.focus();
+                    return;
+                }
+                document.querySelector("input[name=catalog]").value = this.formData.catalog;
+                document.getElementsByTagName("form")[0].submit();
+            }
+        }
+    });
+</script>
+</body>
+</html>

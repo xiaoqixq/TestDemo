@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>系统登陆</title>
+    <link rel="stylesheet" type="text/css" href="css/element-ui-2.0.7.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome-min.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/element-ui-2.0.7.js"></script>
+    <script type="text/javascript" src="js/edu.js"></script>
+</head>
+<body>
+    <div class="login">
+        <div class="logo">DEMO</div>
+        <div class="error-msg" v-show="errMsg">{{errMsg}}</div>
+        <el-form ref="form" :model="formData" label-width="60px" label-Position="left">
+            <el-form-item label="登录名">
+                <el-input v-model="formData.loginName"></el-input>
+            </el-form-item>
+            <el-form-item label="密码">
+                <el-input v-model="formData.password" type="password"></el-input>
+            </el-form-item>
+            <el-button type="primary" size="large" @click="onSubmit" icon="fa fa-user">登陆系统</el-button>
+        </el-form>
+    </div>
+    <script type="text/javascript">
+        var vue = new Vue({
+            el: '.login',
+            data: {
+                formData:{},
+                errMsg:""
+            },
+            methods:{
+                onSubmit:function () {
+                    var formData = this.formData;
+                    var me = this;
+                    edu.ajax({
+                        method:"POST",
+                        url:"login/on",
+                        data:formData
+                    }).then(function (res) {
+                        window.location.href = res.msg;
+                    }).fail(function(err){
+                        me.errMsg = err.msg;
+                    })
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+body{
+    margin: 0px;
+    display: block;
+}
+
+.photo-add{
+    position:absolute;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    top:0px;
+    bottom:0px;
+    width: 100%;
+    box-sizing:border-box;
+}
+
+.photo-add .fa{
+    margin-right: 5px;
+}
+
+
+.photo-add .body .el-select{
+    width: 100%;
+}
+
+.photo-add .body .error-msg{
+    height: 50px;
+    line-height: 50px;
+    color: #fa5555;
+}
+
+.photo-add .tools{
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background: #ddd;
+    padding-left: 15px;
+}
+
+

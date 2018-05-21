@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>照片详情</title>
+    <link rel="stylesheet" type="text/css" href="../css/element-ui-2.0.7.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome-min.css">
+    <link rel="stylesheet" type="text/css" href="../css/photo-details.css">
+
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="../js/element-ui-2.0.7.js"></script>
+    <script type="text/javascript" src="../js/edu.js"></script>
+</head>
+<body>
+<div class="photo-details">
+    <div class="body">
+        <img :src="'../uploads/' + item.filePath" v-if="item.filePath">
+    </div>
+    <div class="tools">
+        <el-button type="primary" icon="fa fa-arrow-left" @click="back()">返回</el-button>
+        <div class="title">{{item.title}}</div>
+        <div class="descs">{{item.descs}}</div>
+        <div class="createDt">{{item.createDt}}</div>
+    </div>
+</div>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '.photo-details',
+        data:{
+            item:{}
+        },
+        methods:{
+            back:function () {
+                var catalog = "A";
+                if(this.item){
+                    catalog = this.item.catalog;
+                }
+                window.location.href = "photoList.html?catalog=" + catalog;
+            }
+        }
+    });
+
+    var loadData = function () {
+        var id = edu.urlParams["id"];
+        if(id){
+            edu.ajax({
+                method:"GET",
+                url:"../photo/get?id=" + id
+            }).then(function (json) {
+                var item = json.msg;
+                vue.item = item;
+            })
+        }
+    };
+
+    loadData();
+</script>
+</body>
+</html>

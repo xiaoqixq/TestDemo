@@ -1,0 +1,37 @@
+body{
+    background: #ddd;
+    display: flex;
+    justify-content: center;
+}
+
+.login{
+    background-color: #fff;
+    width: 410px;
+    height: 260px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.login .fa{
+    margin-right: 5px;
+}
+
+.login .logo{
+    height: 50px;
+    display: inline-block;
+    line-height: 50px;
+    font-size: 20px;
+    font-weight: 800;
+    padding-bottom: 20px;
+}
+
+.login .error-msg{
+    padding: 10px;
+    text-align: center;
+    color: #fa5555;
+}
+
+.login .el-button{
+    width: 100%;
+}

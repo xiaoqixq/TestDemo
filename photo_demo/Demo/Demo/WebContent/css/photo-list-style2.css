@@ -1,0 +1,18 @@
+.photo-list .body > .item{
+    height: 200px;
+    width: 400px;
+}
+
+
+.photo-list .body > .item > img{
+    width: 150px;
+    max-height: 180px;
+}
+
+.photo-list .body > .item > .title{
+
+}
+
+.photo-list .body > .item > .descs{
+
+}

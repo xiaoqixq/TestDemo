@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>相册列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/element-ui-2.0.7.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome-min.css">
+    <link rel="stylesheet" type="text/css" href="../css/photo-list.css">
+
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="../js/element-ui-2.0.7.js"></script>
+    <script type="text/javascript" src="../js/edu.js"></script>
+</head>
+<body>
+    <div class="photo-list">
+        <el-tabs v-model="catalogSelected" type="card" @tab-click="tabClick">
+            <el-tab-pane :label="c.text" :name="c.id" v-for="c in catalogs" :key="c.id" ></el-tab-pane>
+        </el-tabs>
+        <div class="body">
+            <div class="item" v-for="item in items" :key="item.id" :class="{active:item.active}" @click="itemClick(item)" @dblClick="details()">
+                <img :src="'../uploads/' + item.filePath">
+                <div class="title">{{item.title}}</div>
+                <div class="descs">{{item.descs}}</div>
+            </div>
+        </div>
+        <el-pagination layout="prev, pager, next" :total="totals" :page-size="limit" @current-change="changePage"></el-pagination>
+        <div class="tools">
+            <el-button type="primary" icon="fa fa-plus" @click="add()">增加</el-button>
+            <el-button type="primary" icon="fa fa-external-link-square" @click="details()">详细</el-button>
+            <el-button type="primary" icon="fa fa-times" @click="remove()">删除</el-button>
+            <el-input placeholder="请输入内容" v-model="search" class="search"></el-input>
+            <el-button type="primary" icon="fa fa-search" @click="query()">查询</el-button>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var vue = new Vue({
+            el: '.photo-list',
+            data: {
+                activeItem:null,
+                totals:0,
+                start:0,
+                limit:6,
+                search:"",
+                catalogSelected:"A",
+                catalogs:[
+                    {id:"A",text:"风景"},
+                    {id:"B",text:"人物"},
+                    {id:"C",text:"夜景"}
+                ],
+                items:[]
+            },
+            methods:{
+                tabClick:function () {
+                    loadData();
+                },
+                changePage:function (index) {
+                    this.start = (index - 1) * this.limit;
+                    loadData();
+                },
+                itemClick:function (item) {
+                    var actItem = this.activeItem;
+                    if(this.activeItem == item){
+                        return;
+                    }
+                    if(actItem){
+                        actItem.active = false;
+                    }
+
+                    item.active = true;
+                    this.activeItem = item;
+                },
+                add:function () {
+                    window.location.href = "photoAdd.html";
+                },
+                details:function () {
+                    var actItem = this.activeItem;
+                    if(actItem){
+                        window.location.href = "photoDetails.html?id=" + actItem.id;
+                    }
+                },
+                remove:function () {
+                    var actItem = this.activeItem;
+                    var items = this.items;
+                    if(actItem){
+                        edu.ajax({
+                            method:"POST",
+                            url:"../photo/remove?id=" + actItem.id
+                        }).then(function () {
+                           var index = items.findIndex(function (value) {
+                               return actItem.id === value.id;
+                           });
+                           if(index > -1){
+                               items.splice(index,1)
+                           }
+                        })
+                    }
+                },
+                query:function () {
+
+                }
+            }
+        });
+
+
+        var loadData = function () {
+            edu.ajax({
+                method:"get",
+                url:"../photo/find?catalog=" + vue.catalogSelected + "&start=" + vue.start + "&limit=" + vue.limit
+            }).then(function (json) {
+                var page = json.msg;
+                vue.totals = page.totals;
+                vue.items.splice(0,vue.items.length);
+                if(page.items){
+                    for(var i = 0; i < page.items.length; i ++){
+                        var it = page.items[i];
+                        it.active = false;
+                        vue.items.push(it);
+                    }
+                }
+            })
+        };
+        if(edu.urlParams["catalog"]){
+            vue.catalogSelected = edu.urlParams["catalog"];
+        }
+        loadData();
+
+    </script>
+</body>
+</html>
